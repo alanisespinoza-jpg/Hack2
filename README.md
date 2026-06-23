@@ -7,7 +7,7 @@ Consola operativa para gestionar colonias de criaturas digitales (Tropeles). Pro
 | Nombre | Parte |
 |--------|-------|
 | Alanis Marie Espinoza Feliciano | Autenticación, Layout, Dashboard, Deploy |
-| Marylin Regina Ccolcca Flores | Tropeles, Feed infinito, Detalle de señal |
+| Marylin Regina Ccolcca Flores | Tropeles, Feed infinito, Detalle de señal | 202420045
 | Gloria Angeline Alfaro Quispe | Sector Story Engine |
 
 ## Instalación
