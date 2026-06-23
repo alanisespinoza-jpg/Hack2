@@ -194,3 +194,9 @@ export interface SignalsFeedParams {
   status?: SignalStatus | ''
   q?: string
 }
+
+// ─── Aliases para compatibilidad con estudiante C ─────────────────────────────
+export type Sector = SectorDTO
+export type SectorStory = SectorStoryResponse
+export type StoryStage = SectorStoryStage
+export interface SectorsResponse { items: SectorDTO[] }

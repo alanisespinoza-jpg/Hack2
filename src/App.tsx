@@ -8,9 +8,7 @@ import TropelsPage from './pages/TropelsPage';
 import SignalsFeedPage from './pages/SignalsFeedPage';
 import SignalDetailPage from './pages/SignalDetailPage';
 import SectorsPage from './pages/SectorsPage';
-
-// Stub — integrante C reemplaza con su implementación
-const SectorStoryPage = () => <div className="text-white p-8">Sector Story (integrante C)</div>;
+import SectorStoryPage from './pages/SectorStoryPage';
 
 function App() {
   return (
