@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# TropelCare Control Room — Pizza Protocol
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Consola operativa para gestionar colonias de criaturas digitales (Tropeles). Proyecto desarrollado en hackathon de 2 horas.
 
-Currently, two official plugins are available:
+## Integrantes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Nombre | Parte |
+|--------|-------|
+| Alanis Marie Espinoza Feliciano | Autenticación, Layout, Dashboard, Deploy |
+| Marylin Regina Ccolcca Flores | Tropeles, Feed infinito, Detalle de señal |
+| Gloria Angeline Alfaro Quispe | Sector Story Engine |
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Variables de entorno
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Crear un archivo `.env` en la raíz del proyecto:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_API_BASE_URL=https://<backend-url>/api/v1
+```
+
+## Comandos
+
+```bash
+pnpm dev          # Servidor de desarrollo
+pnpm build        # Build de producción
+pnpm typecheck    # Verificación de tipos TypeScript
+pnpm preview      # Preview del build
+```
+
+## Deploy
+
+**URL:** https://hack2-brown-mu.vercel.app
+
+Desplegado en Vercel con redeploy automático en cada push a `main`.
+
+## Decisiones técnicas
+
+- **Estado en URL**: Los filtros, paginación y ordenamiento de Tropeles y Señales se persisten en `URLSearchParams` como fuente única de verdad. Permite compartir y restaurar el estado exacto.
+- **AbortController**: Cada fetch crea un controller propio que se cancela cuando cambian los params o el componente se desmonta. Evita race conditions y resultados de requests antiguas.
+- **Feed cursor-based**: El infinite scroll usa `IntersectionObserver` sobre un sentinel al final de la lista. Deduplicación por ID con un `Set` en `useRef`. Un `inFlightRef` garantiza una sola carga en vuelo.
+- **Snapshot del feed**: Al navegar al detalle de una señal se guarda en `sessionStorage` el estado completo del feed (items, cursor, scroll). Al volver se rehidrata instantáneamente sin refetch.
+- **Axios centralizado**: Una sola instancia axios en `src/lib/axios.ts` con interceptores para JWT e inyección del token. Los módulos de api importan desde ella para evitar instancias duplicadas.
+- **Scrollytelling**: El `SectorStoryPage` usa `IntersectionObserver` sobre `window` y `position: fixed` para el panel lateral, por lo que se excluye del Layout compartido.
+- **CSS Scroll-driven Animations**: Se aplican solo si `CSS.supports('animation-timeline', 'scroll()')` es verdadero. Fallback con transiciones CSS estándar.
+- **View Transition API**: Se usa `document.startViewTransition()` entre la vista resumen y la historia del sector. Fallback a `setState` directo si no hay soporte.
+- **prefers-reduced-motion**: Todas las animaciones respetan el media query. Las transiciones se desactivan y el scroll usa `behavior: 'auto'` en lugar de `'smooth'`.

@@ -34,8 +34,9 @@ function App() {
           <Route path="/sectors" element={
             <ProtectedRoute><Layout><SectorsPage /></Layout></ProtectedRoute>
           } />
+          {/* SectorStoryPage fuera del Layout: usa fixed positioning y window.scroll */}
           <Route path="/sectors/:id/story" element={
-            <ProtectedRoute><Layout><SectorStoryPage /></Layout></ProtectedRoute>
+            <ProtectedRoute><SectorStoryPage /></ProtectedRoute>
           } />
 
           {/* Fallback */}
